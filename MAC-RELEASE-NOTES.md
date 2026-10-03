@@ -29,13 +29,15 @@ reopen Nyapix afterward. Permission is optional and is never granted automatical
 
 ## What is and is not verified
 
-Release automation checks both architectures on macOS 15 runners: application
-tests, native-module loading, pixel/3D rendering, local relay delivery, ad-hoc
-signature integrity, DMG verification, and the app copied out of the DMG.
+Release automation checks both architectures on macOS 15 runners: core/UI tests,
+native-module loading, pixel rendering, local relay delivery, ad-hoc signature
+integrity, DMG verification, and the app copied out of the DMG.
+Apple Silicon additionally runs the full 3D, polish, and routines test suites.
 This does not replace testing a quarantined download on a person's Mac.
-The Intel CI runner uses software graphics for rendering checks because its
-virtual machine has no usable hardware graphics context. This test setting is
-not enabled in the normal app.
+**Intel 3D rendering is not verified**: the Intel CI machine cannot create a
+WebGL context. Its packaged tests instead verify the automatic pixel fallback.
+On an Intel Mac, 3D requires a working WebGL graphics driver; pixel mode remains
+available. No graphics-security overrides are enabled in the app.
 Global input capture is not tested when macOS permission is unavailable.
 
 - Spotify reactions and automatic fullscreen/presentation detection remain

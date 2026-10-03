@@ -10,7 +10,11 @@ function run(args,input='',env=process.env){return new Promise((resolve,reject)=
   child.on('exit',code=>{clearTimeout(timer);code===0?resolve(out):reject(new Error(`${args.join(' ')}: Exit ${code}: ${err} ${out}`));});child.stdin.end(input);
 });}
 (async()=>{
-  const smoke=await run(['--nyapix-smoke-test']);assert(smoke.includes('"threeD":true'),smoke);
+  const smoke=await run(['--nyapix-smoke-test']);
+  const result=JSON.parse(smoke.trim());
+  assert.equal(result.pixel,true);assert.equal(result.reactions,true);
+  if(process.env.NYAPIX_TEST_EXPECT_NO_WEBGL==='1')assert.equal(result.graphicsFallback,true);
+  else assert.equal(result.threeD,true);
   const home=fs.mkdtempSync(path.join(os.tmpdir(),'nyapix-release-relay-'));
   const hub=new AgentHub();const bridge=await startAgentBridge(hub,{home});
   try {

@@ -5,7 +5,7 @@ on:
     tags: ['mac-v*']
     paths:
       - '.github/workflows/mac-release.yml'
-      - 'src/main/test-graphics.cjs'
+      - 'src/main/packaged-check.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
             app: dist/mac/Nyapix.app
     runs-on: ${{ matrix.runner }}
     env:
-      NYAPIX_TEST_SOFTWARE_GL: ${{ matrix.arch == 'x64' && '1' || '0' }}
+      NYAPIX_TEST_EXPECT_NO_WEBGL: ${{ matrix.arch == 'x64' && '1' || '0' }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -33,7 +33,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm audit --omit=dev --audit-level=high
-      - run: npm test
+      - name: Full suite on Apple Silicon
+        if: matrix.arch == 'arm64'
+        run: npm test
+      - name: Core and UI suites on GPU-less Intel runner
+        if: matrix.arch == 'x64'
+        run: npm run test:eyes && npm run test:desktop && npm run test:agents && npm run test:ui
       - run: npm run dist:mac -- --${{ matrix.arch }}
       - name: Check signature and packaged runtime
         env:

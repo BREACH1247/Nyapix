@@ -1,5 +1,4 @@
 const {app,BrowserWindow,ipcMain}=require('electron');
-require('./test-graphics.cjs');
 const path=require('node:path');
 app.whenReady().then(async()=>{
   try {
@@ -19,11 +18,14 @@ app.whenReady().then(async()=>{
     await win.loadFile(path.join(__dirname,'../settings/index.html'));
     const result=await win.webContents.executeJavaScript(`(async()=>{
       const pet=window.__nyapixPreview;
-      for(let i=0;i<150&&!pet.render3D?.rig;i++){await new Promise(r=>setTimeout(r,40));pet.draw();if(pet.renderError)throw new Error(pet.renderError);}
-      if(!pet.render3D?.rig)throw new Error('Packaged 3D model did not render');
+      const expectFallback=${process.env.NYAPIX_TEST_EXPECT_NO_WEBGL==='1'};
+      for(let i=0;i<150&&!pet.render3D?.rig;i++){await new Promise(r=>setTimeout(r,40));pet.draw();if(pet.renderError){if(expectFallback)break;throw new Error(pet.renderError);}}
+      if(expectFallback){
+        if(!pet.renderError||!pet._lastGrid)throw new Error('Expected working pixel fallback after WebGL failure');
+      }else if(!pet.render3D?.rig)throw new Error('Packaged 3D model did not render');
       pet.setAgentEvent({provider:'codex',phase:'thinking',activity:'testing'});pet.draw();if(pet.mode!=='test')throw new Error('Reaction failed');
       pet.setSettings({renderMode:'pixel'});pet.mode='idle';pet.draw();if(!pet._lastGrid)throw new Error('Pixel art failed');
-      return {pixel:true,threeD:true,reactions:true};
+      return {pixel:true,threeD:!expectFallback,graphicsFallback:expectFallback,reactions:true};
     })()`);
     console.log(JSON.stringify({packaged:app.isPackaged,version:app.getVersion(),nativeModule:true,nativeInput:inputAllowed?'tested':'not-tested-permission-required',calendar:true,...result}));app.exit(0);
   }catch(e){console.error(e);app.exit(1);}
