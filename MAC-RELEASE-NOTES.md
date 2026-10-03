@@ -1,12 +1,12 @@
-# Nyapix 0.1.1 — macOS beta
+# Nyapix 0.1.2 — macOS beta
 
 Pixel and 3D cats and dogs, custom appearances, reminders, focus timers,
 idle routines, monitor homes, and experimental local agent reactions.
 
 ## Downloads
 
-- **Nyapix-0.1.1-mac-arm64.dmg**: Apple Silicon (M-series) Macs.
-- **Nyapix-0.1.1-mac-x64.dmg**: Intel Macs.
+- **Nyapix-0.1.2-mac-arm64.dmg**: Apple Silicon (M-series) Macs.
+- **Nyapix-0.1.2-mac-x64.dmg**: Intel Macs.
 - **SHA256SUMS-mac.txt**: download checksums.
 
 This initial beta requires **macOS 15 or newer**. Open the DMG, drag Nyapix
