@@ -1,7 +1,11 @@
 name: macOS beta release
 on:
   push:
+    branches: [main]
     tags: ['mac-v*']
+    paths:
+      - '.github/workflows/mac-release.yml'
+      - 'src/main/test-graphics.cjs'
   workflow_dispatch:
 permissions:
   contents: read
