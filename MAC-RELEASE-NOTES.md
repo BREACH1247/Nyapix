@@ -1,12 +1,12 @@
-# Nyapix 0.1.0 — macOS beta
+# Nyapix 0.1.1 — macOS beta
 
 Pixel and 3D cats and dogs, custom appearances, reminders, focus timers,
 idle routines, monitor homes, and experimental local agent reactions.
 
 ## Downloads
 
-- **Nyapix-0.1.0-mac-arm64.dmg**: Apple Silicon (M-series) Macs.
-- **Nyapix-0.1.0-mac-x64.dmg**: Intel Macs.
+- **Nyapix-0.1.1-mac-arm64.dmg**: Apple Silicon (M-series) Macs.
+- **Nyapix-0.1.1-mac-x64.dmg**: Intel Macs.
 - **SHA256SUMS-mac.txt**: download checksums.
 
 This initial beta requires **macOS 15 or newer**. Open the DMG, drag Nyapix
@@ -33,6 +33,9 @@ Release automation checks both architectures on macOS 15 runners: application
 tests, native-module loading, pixel/3D rendering, local relay delivery, ad-hoc
 signature integrity, DMG verification, and the app copied out of the DMG.
 This does not replace testing a quarantined download on a person's Mac.
+The Intel CI runner uses software graphics for rendering checks because its
+virtual machine has no usable hardware graphics context. This test setting is
+not enabled in the normal app.
 Global input capture is not tested when macOS permission is unavailable.
 
 - Spotify reactions and automatic fullscreen/presentation detection remain

@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
+require('../src/main/test-graphics.cjs');
 const path = require("node:path");
 const fs = require("node:fs");
 const assert = require("node:assert/strict");

@@ -1,4 +1,5 @@
 const {app,BrowserWindow,ipcMain}=require('electron');
+require('./test-graphics.cjs');
 const path=require('node:path');
 app.whenReady().then(async()=>{
   try {

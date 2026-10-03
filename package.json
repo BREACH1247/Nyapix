@@ -1,7 +1,7 @@
 {
   "name": "nyapix",
   "productName": "Nyapix",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pixel and 3D desktop companions with focus tools and music reactions",
   "main": "src/main/entry.cjs",
   "author": "Nyapix",
