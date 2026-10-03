@@ -1,0 +1,124 @@
+html,
+body {
+  background: #f7f5f0;
+  background-image:
+    radial-gradient(ellipse at 70% 65%, #e4ebd5 0%, transparent 55%),
+    radial-gradient(#86966e18 1px, transparent 1px);
+  background-size:
+    auto,
+    20px 20px;
+  font-family: "Segoe UI", sans-serif;
+  color: #35352f;
+}
+.help {
+  left: 48px;
+  top: 70px;
+  max-width: 340px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: #35352f;
+}
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #72845e;
+  font-weight: 700;
+}
+.help h1 {
+  font:
+    400 49px/1.08 Georgia,
+    serif;
+  letter-spacing: -2px;
+  margin: 22px 0;
+}
+.help p {
+  color: #818575;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.help ul {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+.help li {
+  color: #818575;
+  font-size: 11px;
+  line-height: 2.1;
+}
+.help li:before {
+  content: "✦";
+  color: #9aa982;
+  margin-right: 10px;
+}
+.help a {
+  display: inline-block;
+  color: #637c49;
+  font-size: 12px;
+  text-decoration: none;
+  padding: 10px 0;
+  border-bottom: 1px solid #b8c5a4;
+}
+.bar {
+  top: 28px;
+  right: 32px;
+  max-width: 570px;
+  gap: 6px;
+}
+button {
+  font:
+    11px "Segoe UI",
+    sans-serif;
+  background: #fffefa;
+  color: #687d51;
+  border: 1px solid #dce2d0;
+  border-radius: 9px;
+  padding: 9px 12px;
+  box-shadow: 0 2px 4px #35432b05;
+}
+button:hover {
+  background: #e7eedb;
+  border-color: #adc297;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #a5b890;
+  outline-offset: 3px;
+}
+.playground-footer {
+  position: fixed;
+  bottom: 24px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.7px;
+  color: #8b927f;
+  pointer-events: none;
+}
+.playground-footer span {
+  color: #a0a591;
+}
+@media (max-width: 760px) {
+  .help {
+    left: 24px;
+    top: 110px;
+    max-width: 290px;
+  }
+  .help h1 {
+    font-size: 36px;
+  }
+  .help ul {
+    display: none;
+  }
+  .bar {
+    left: 24px;
+    right: 24px;
+    justify-content: flex-start;
+  }
+  .playground-footer span {
+    display: none;
+  }
+}

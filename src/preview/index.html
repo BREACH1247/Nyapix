@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nyapix preview</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: Tahoma, sans-serif;
+        background:
+          radial-gradient(ellipse at 70% 20%, #c9d98a 0%, transparent 42%),
+          linear-gradient(180deg, #6e9a55 0%, #3e6b3a 48%, #2a4a28 100%);
+      }
+      .desk {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .help,
+      .bar {
+        pointer-events: auto;
+      }
+      .help {
+        position: absolute;
+        z-index: 5;
+        left: 24px;
+        top: 24px;
+        color: #f4efe6;
+        max-width: 360px;
+        background: rgba(10, 10, 10, 0.72);
+        padding: 16px 18px;
+        border: 3px solid #111;
+      }
+      .help h1 {
+        margin: 0 0 8px;
+        letter-spacing: 0.14em;
+        font-size: 18px;
+      }
+      .help p,
+      .help li {
+        font-size: 13px;
+        line-height: 1.45;
+        color: #ddd6cc;
+      }
+      .bar {
+        position: absolute;
+        z-index: 5;
+        right: 24px;
+        top: 24px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        max-width: 520px;
+      }
+      button {
+        background: #111;
+        color: #ffe56b;
+        border: 2px solid #ffe56b;
+        padding: 8px 10px;
+        cursor: pointer;
+        font:
+          12px Tahoma,
+          sans-serif;
+      }
+    </style>
+    <link rel="stylesheet" href="../overlay/overlay.css" />
+    <link rel="stylesheet" href="preview.css" />
+  </head>
+  <body>
+    <div class="desk">
+      <div class="help">
+        <span class="eyebrow">THE COMPANION PLAYGROUND</span>
+        <h1>A little friend.<br />A happier desk.</h1>
+        <p>
+          Get to know Nyapix. Try a reaction, find a favorite look, or simply
+          hang out.
+        </p>
+        <ul>
+          <li>Eyes follow the mouse</li>
+          <li>Drag to mochi-stretch · shake to wobble</li>
+          <li>Move fast to hunt</li>
+          <li>Type to watch it tap keys with its paws</li>
+          <li>Scroll to roll toilet paper</li>
+        </ul>
+        <a href="../settings/index.html">Customize your companion ↗</a>
+      </div>
+      <div class="bar">
+        <button id="asCat">Cat</button>
+        <button id="asDog">Dog</button>
+        <button id="asPixel">Pixel</button>
+        <button id="as3D">3D</button>
+        <button id="think">Agent thinking</button>
+        <button id="done">Agent done</button>
+        <button id="stretch">Stretch</button>
+        <button id="water">Water</button>
+        <button id="pomo">Pomodoro</button>
+        <button id="cream">Cream coat</button>
+        <button id="orange">Orange coat</button>
+      </div>
+    </div>
+    <canvas
+      id="stage"
+      style="position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1"
+    ></canvas>
+    <div id="pin" hidden class="hud"></div>
+    <div id="bubble" hidden class="hud"></div>
+    <div class="playground-footer">
+      Drag · Pet · Type · Scroll <span>A tiny pause in your day. ✦</span>
+    </div>
+    <script type="module">
+      import { NyapixCat } from "../cat/engine.js";
+      import { labelFromDomKey } from "../shared/keys.js";
+      import { PET_DEFAULTS, PRESETS } from "../shared/defaults.js";
+      const canvas = document.getElementById("stage");
+      const cat = new NyapixCat(canvas, {
+        pinnedMessage: "hello from Nyapix",
+        userName: "friend",
+        pomodoroEnabled: false,
+      });
+      function fit() {
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        canvas.width = Math.floor(innerWidth * dpr);
+        canvas.height = Math.floor(innerHeight * dpr);
+        cat.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        cat.setDisplay(innerWidth, innerHeight);
+        cat.settings.scale = 6;
+        cat.x = Math.max(
+          12,
+          innerWidth * (innerWidth > 760 ? 0.6 : 0.5) - cat.bodyW() / 2,
+        );
+        cat.y = Math.max(12, innerHeight * 0.72 - cat.bodyH() / 2);
+        cat.rememberHome();
+      }
+      let dragging = false;
+      canvas.addEventListener("pointermove", (e) => {
+        cat.setMouse(e.clientX, e.clientY);
+        if (dragging) cat.moveDrag(e.clientX, e.clientY);
+        else cat.petHead(e.clientX, e.clientY);
+      });
+      canvas.addEventListener("pointerdown", (e) => {
+        if (cat.hitTest(e.clientX, e.clientY)) {
+          dragging = true;
+          canvas.setPointerCapture(e.pointerId);
+          cat.startDrag(e.clientX, e.clientY);
+        }
+      });
+      window.addEventListener("pointerup", () => {
+        dragging = false;
+        cat.endDrag();
+      });
+      window.addEventListener("pointercancel", () => {
+        dragging = false;
+        cat.endDrag();
+      });
+      window.addEventListener("keydown", (e) => {
+        if (!e.ctrlKey && !e.metaKey && !e.altKey)
+          cat.key({ label: labelFromDomKey(e.key), repeat: e.repeat });
+      });
+      window.addEventListener("wheel", (e) => cat.wheel(e.deltaY), {
+        passive: true,
+      });
+      document.getElementById("asCat").onclick = () =>
+        cat.setSettings({ petKind: "cat", ...PET_DEFAULTS.cat });
+      document.getElementById("asPixel").onclick = () => cat.setSettings({ renderMode: "pixel" });
+      document.getElementById("as3D").onclick = () => cat.setSettings({ renderMode: "3d" });
+      document.getElementById("asDog").onclick = () =>
+        cat.setSettings({ petKind: "dog", ...PET_DEFAULTS.dog });
+      document.getElementById("think").onclick = () => cat.setAgent("think");
+      document.getElementById("done").onclick = () => cat.setAgent("done");
+      document.getElementById("stretch").onclick = () => cat.remindStretch();
+      document.getElementById("water").onclick = () => cat.remindWater();
+      document.getElementById("cream").onclick = () =>
+        cat.setSettings(PRESETS.find((p) => p.id === "cream"));
+      document.getElementById("orange").onclick = () =>
+        cat.setSettings(PRESETS.find((p) => p.id === "orange"));
+      document.getElementById("pomo").onclick = () => {
+        cat.setSettings({
+          pomodoroEnabled: true,
+          pomodoroFocus: 1,
+          pomodoroBreak: 1,
+        });
+        cat.startPomodoro();
+      };
+      const pin = document.getElementById("pin");
+      const bubble = document.getElementById("bubble");
+      function loop(now) {
+        const dt = Math.min(0.05, (now - (loop.prev || now)) / 1000);
+        loop.prev = now;
+        cat.update(dt);
+        cat.draw();
+        const ui = cat.uiState();
+        pin.hidden = !ui.pin;
+        pin.textContent = ui.pin;
+        pin.style.left = Math.max(8, Math.min(innerWidth - 230, ui.x)) + "px";
+        pin.style.top = Math.max(8, ui.y - 36) + "px";
+        bubble.hidden = !ui.bubble;
+        bubble.textContent = ui.bubble;
+        bubble.style.left =
+          Math.max(8, Math.min(innerWidth - 230, ui.x)) + "px";
+        bubble.style.top = Math.max(8, ui.y - 72) + "px";
+        requestAnimationFrame(loop);
+      }
+      window.__nyapix = cat;
+      window.addEventListener("resize", fit);
+      fit();
+      requestAnimationFrame(loop);
+    </script>
+  </body>
+</html>

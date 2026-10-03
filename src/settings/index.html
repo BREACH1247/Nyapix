@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nyapix settings</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <main>
+      <header class="app-header">
+        <label class="theme-control">Theme <select id="theme" aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+        <a class="brand" href="#companion"
+          ><span class="brand-icon" aria-hidden="true">✦</span> nyapix<span
+            class="brand-tag"
+            >DESKTOP COMPANION</span
+          ></a
+        ><span class="save-status" id="saveStatus" role="status"
+          >Your cozy corner</span
+        >
+      </header>
+      <div class="workspace">
+        <aside class="companion" id="companion">
+          <div class="eyebrow">A LITTLE COMPANY, A LOT OF JOY</div>
+          <h1>Make yourself<br />at home.</h1>
+          <p class="intro">
+            A tiny friend for your everyday.<br />Make them a little more you.
+          </p>
+          <div class="preview-scene">
+            <span class="scene-star star-one" aria-hidden="true">✧</span
+            ><span class="scene-star star-two" aria-hidden="true">✧</span>
+            <div class="preview-bubble" id="previewBubble">
+              Happy to be here.
+            </div>
+            <canvas
+              id="preview"
+              width="280"
+              height="250"
+              aria-label="Live animated companion preview"
+            ></canvas>
+            <div class="scene-floor"></div>
+            <span class="scene-label" id="modeLabel" role="status"
+              >JUST HANGING OUT</span
+            >
+          </div>
+          <div class="reaction-heading">
+            <span>Meet their little moods</span><span>TRY ONE ↓</span>
+          </div>
+          <div class="reaction-grid" id="reactions">
+            <button data-reaction="pet" type="button">♡ <span>Pet</span></button
+            ><button data-reaction="type" type="button">
+              ⌨ <span>Type</span>
+            </button>
+            <button data-reaction="think" type="button">
+              ✧ <span>Think</span></button
+            ><button data-reaction="hop" type="button">
+              ↟ <span>Celebrate</span>
+            </button>
+            <button data-reaction="stretch" type="button">
+              ↔ <span>Stretch</span></button
+            ><button data-reaction="water" type="button">
+              ◒ <span>Sip water</span>
+            </button>
+            <button data-reaction="paper" type="button">
+              ≋ <span>Scroll</span></button
+            ><button data-reaction="sleep" type="button">
+              ☾ <span>Nap</span>
+            </button>
+            <button data-reaction="wave" data-dog-only type="button" hidden>
+              ♧ <span>Wave</span>
+            </button>
+            <button data-reaction="sniff" data-dog-only type="button" hidden>
+              ⌁ <span>Sniff</span>
+            </button>
+          </div>
+          <p class="companion-tip">
+            Move your mouse to catch their eye.<br />A little head pet goes a
+            long way.
+          </p>
+          <div class="art-note">
+            <span>32 × 32</span> Pixel by pixel. Full of personality.
+          </div>
+        </aside>
+        <div class="controls">
+          <nav class="tabs" aria-label="Settings sections">
+            <button
+              type="button"
+              class="active"
+              data-tab="look"
+              aria-pressed="true"
+            >
+              Companion</button
+            ><button type="button" data-tab="reminders" aria-pressed="false">
+              Rituals</button
+            ><button type="button" data-tab="desktop" aria-pressed="false">
+              Desktop
+            </button>
+            <button type="button" data-tab="agents" aria-pressed="false">
+              Agents
+            </button>
+          </nav>
+
+          <section data-panel="look">
+            <div class="section-heading">
+              <span class="eyebrow">01 / YOUR COMPANION</span>
+              <h2>A friend with personality.</h2>
+              <p>Choose a companion and find their signature look.</p>
+            </div>
+            <div class="pets" id="pets"></div>
+            <label>Pet name<input id="petName" maxlength="24" placeholder="Your little companion" /></label>
+            <h3>Choose your style</h3>
+            <div class="render-modes" role="group" aria-label="Character style">
+              <button type="button" data-render-mode="pixel" aria-pressed="true"><strong>Pixel</strong><small>Tiny pixels. Big personality.</small></button>
+              <button type="button" data-render-mode="3d" aria-pressed="false"><strong>3D</strong><small>Soft shapes. Smooth motion.</small></button>
+            </div>
+            <p class="hint" id="renderStatus" role="status"></p>
+            <p class="hint" id="petDescription">
+              Curious eyes, tiny paws, and a little mischief.
+            </p>
+            <label
+              >What should they call you?<input
+                id="userName"
+                maxlength="24"
+                placeholder="Your name"
+            /></label>
+            <div class="music-card">
+              <label><input id="spotifyEnabled" type="checkbox" /> Vibe with Spotify</label>
+              <p class="hint">Windows desktop player · gentle swaying while music plays. No audio recording or beat detection.</p>
+              <p id="musicStatus" role="status">Off</p>
+              <label>Music personality<select id="musicStyle"><option value="sway">Gentle sway</option><option value="bob">Head bob</option><option value="dance">Playful dance</option></select></label>
+              <button id="musicDemo" type="button">Try a little groove</button>
+            </div>
+            <h3>A ready-made look</h3>
+            <div class="presets" id="presets"></div>
+            <h3>Your saved looks</h3>
+            <div class="row wrap"><input id="favoriteName" maxlength="30" placeholder="Name this look" aria-label="Saved look name" /><button id="saveFavorite" type="button">Save this look</button></div>
+            <div id="favorites" class="row wrap"></div>
+            <h3>The finishing touches</h3>
+            <div class="row">
+              <label>Fur<input id="furColor" type="color" /></label>
+              <label>Belly<input id="bellyColor" type="color" /></label>
+              <label>Marks<input id="markColor" type="color" /></label>
+            </div>
+            <div class="row">
+              <label>Inner ear<input id="innerEarColor" type="color" /></label>
+              <label>Eyes<input id="eyeColor" type="color" /></label>
+              <label>Nose<input id="noseColor" type="color" /></label>
+            </div>
+            <label
+              >Pattern
+              <select id="pattern"></select>
+            </label>
+            <label
+              >Size <span id="scaleVal"></span>
+              <input id="scale" type="range" min="3" max="8" step="1" />
+            </label>
+            <label
+              >Collar<input id="collarColor" type="color"
+            /></label>
+            <label>Accessory<select id="accessory"><option value="none">None</option><option value="collar">Collar</option><option value="bow">Bow tie</option><option value="bandana">Bandana</option></select></label>
+            <h3>Little routines</h3>
+            <label class="check"><input id="routinesEnabled" type="checkbox" /> Occasional idle routines</label>
+            <div class="row wrap"><button type="button" data-routine="groom">Groom</button><button type="button" data-routine="chase">Chase tail</button><button type="button" data-routine="toy">Bring a toy</button><button type="button" data-routine="sleep">Curl up</button></div>
+          </section>
+
+          <section data-panel="agents" hidden>
+            <div class="section-heading">
+              <span class="eyebrow">04 / YOUR WORK BUDDY</span>
+              <h2>Thinking beside you.</h2>
+              <p>
+                Your companion follows your coding agent, shares its replies,
+                and celebrates when a task is finished.
+              </p>
+            </div>
+            <div class="agent-summary">
+              <span class="connection-dot"></span>
+              <div>
+                <strong id="agentSummary">Ready to meet your agents</strong>
+                <p id="agentDetail">
+                  Connect a harness to bring your work to life.
+                </p>
+              </div>
+            </div>
+            <label class="check"
+              ><input id="agentEnabled" type="checkbox" /> React to coding
+              agents</label
+            >
+            <label class="check"
+              ><input id="agentShowOutput" type="checkbox" /> Show reply
+              excerpts on the desktop</label
+            >
+            <label class="check"
+              ><input id="agentSound" type="checkbox" /> Play a sound when a
+              task finishes</label
+            >
+            <h3>Your connections</h3>
+            <div id="agentConnections" class="agent-connections"></div>
+            <p id="agentSetupStatus" class="hint" role="status"></p>
+            <p class="hint">
+              Connect adds Nyapix hooks to your user settings and backs up the
+              previous file. Restart that agent after connecting. For Codex,
+              review and trust the new hooks with <code>/hooks</code>.
+            </p>
+            <div class="privacy-note">
+              Replies stay on this computer and are kept only for this app
+              session. Prompts, tool contents, and reasoning text are not
+              collected.
+            </div>
+            <h3>Try the experience <span class="demo-tag">DEMO</span></h3>
+            <div class="agent-demo">
+              <button type="button" data-agent-demo="editing">Editing</button><button type="button" data-agent-demo="testing">Testing</button>
+              <button type="button" data-agent-demo="thinking">Thinking</button
+              ><button type="button" data-agent-demo="responding">Reply</button
+              ><button type="button" data-agent-demo="waiting">Needs you</button
+              ><button type="button" data-agent-demo="done">Finished</button>
+            </div>
+          </section>
+          <section data-panel="agents" hidden>
+            <div class="history-heading">
+              <h2>Recent replies</h2>
+              <button id="clearAgents" type="button">Clear activity</button>
+            </div>
+            <p class="hint">
+              Up to 20 recent signals. Long replies are shown as excerpts.
+            </p>
+            <div id="agentHistory" class="agent-history">
+              <p class="empty-state">
+                A quiet desk for now.<br />Your agents’ replies will appear
+                here.
+              </p>
+            </div>
+          </section>
+
+          <section data-panel="reminders" hidden>
+            <div class="section-heading">
+              <span class="eyebrow">02 / LITTLE RITUALS</span>
+              <h2>Take care of yourself.</h2>
+              <p>
+                A friendly nudge to pause, stretch, and sip. Set an interval to
+                0 to turn it off.
+              </p>
+            </div>
+            <label
+              >Stretch every (minutes)<input
+                id="stretchMinutes"
+                type="number"
+                min="0"
+                max="240"
+            /></label>
+            <label
+              >Water every (minutes)<input
+                id="waterMinutes"
+                type="number"
+                min="0"
+                max="240"
+            /></label>
+            <label
+              >Pinned note<input
+                id="pinnedMessage"
+                maxlength="80"
+                placeholder="stays above Nyapix"
+            /></label>
+            <div class="row wrap" id="reminderList"></div>
+            <div class="row">
+              <input id="remTime" type="time" aria-label="Reminder time" />
+              <input
+                id="remText"
+                placeholder="Your reminder"
+                maxlength="120"
+                aria-label="Reminder message"
+              />
+              <button id="addRem" type="button">Add</button>
+            </div>
+            <h2 class="sub">Google Calendar</h2>
+            <p class="hint">
+              In Google Calendar: Settings → your calendar → Integrate calendar
+              → copy the secret iCal address.
+            </p>
+            <label
+              >Secret iCal URL<input
+                id="calendarUrl"
+                type="password"
+                autocomplete="off"
+                placeholder="https://calendar.google.com/calendar/ical/…"
+            /></label>
+            <label
+              >Warn me this many minutes before<input
+                id="calendarMinutes"
+                type="number"
+                min="1"
+                max="120"
+            /></label>
+            <div class="row">
+              <button id="syncCal" type="button">Sync now</button>
+            </div>
+            <p class="hint" id="calStatus"></p>
+            <div id="calEvents" class="cal-events"></div>
+          </section>
+
+          <section data-panel="reminders" hidden>
+            <span class="eyebrow">A LITTLE FOCUS</span>
+            <h2>Find your rhythm.</h2>
+            <label class="check"
+              ><input id="pomodoroEnabled" type="checkbox" /> Enable timer
+              beside Nyapix</label
+            >
+            <div class="row">
+              <label
+                >Focus (min)<input
+                  id="pomodoroFocus"
+                  type="number"
+                  min="1"
+                  max="90"
+              /></label>
+              <label
+                >Break (min)<input
+                  id="pomodoroBreak"
+                  type="number"
+                  min="1"
+                  max="30"
+              /></label>
+            </div>
+          </section>
+
+          <section data-panel="desktop" hidden>
+            <div class="section-heading">
+              <span class="eyebrow">03 / FEEL RIGHT AT HOME</span>
+              <h2>Your desk. Your rules.</h2>
+              <p>Choose a home and keep your companion quiet when you need it.</p>
+            </div>
+            <h3>A home on your desktop</h3>
+            <label>Screen<select id="homeDisplay"><option value="primary">Primary screen</option></select></label>
+            <label>Corner<select id="homeCorner"><option value="bottom-right">Bottom right</option><option value="bottom-left">Bottom left</option><option value="top-right">Top right</option><option value="top-left">Top left</option></select></label>
+            <p class="hint">If your chosen screen is disconnected, your companion returns to the primary screen.</p>
+            <h3>Quiet when you need it</h3>
+            <label class="check"><input id="quietAuto" type="checkbox" /> Hide during fullscreen apps and presentations (Windows)</label>
+            <label class="check"><input id="quietFocus" type="checkbox" /> Hide during Pomodoro focus sessions</label>
+            <label class="check"><input id="quietManual" type="checkbox" /> Quiet now</label>
+            <p class="hint">Quiet mode hides your pet and suppresses sounds and reminder pop-ups. Focus time keeps counting. Use tray Settings to bring your pet back.</p>
+            <label class="check"
+              ><input id="peekMode" type="checkbox" /> Peek mode (tuck to the
+              edge)</label
+            >
+            <label class="check"
+              ><input id="openAtLogin" type="checkbox" /> Open Nyapix when
+              Windows starts</label
+            >
+            <label class="check"
+              ><input id="paused" type="checkbox" /> Pause reactions</label
+            >
+            <label class="check"
+              ><input id="soundEnabled" type="checkbox" /> Companion
+              sounds</label
+            >
+            <div class="desktop-note">
+              <h3>A quiet little companion</h3>
+              <p>
+                Drag your pet anywhere on your desktop. Right-click them for
+                quick controls. Calendar sync connects directly to Google.
+              </p>
+            </div>
+          </section>
+          <footer>Made for the small moments. <span>✦</span></footer>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="settings.js"></script>
+  </body>
+</html>

@@ -1,0 +1,76 @@
+{
+  "name": "nyapix",
+  "productName": "Nyapix",
+  "version": "0.1.0",
+  "description": "Pixel and 3D desktop companions with focus tools and music reactions",
+  "main": "src/main/entry.cjs",
+  "author": "Nyapix",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/BREACH1247/Nyapix.git" },
+  "homepage": "https://github.com/BREACH1247/Nyapix",
+  "scripts": {
+    "postinstall": "node scripts/sync-three.cjs",
+    "start": "electron .",
+    "preview": "node scripts/preview.cjs",
+    "test:ui": "electron scripts/verify-ui.cjs",
+    "test:3d": "electron scripts/verify-3d.cjs",
+    "test:polish": "electron scripts/verify-polish.cjs",
+    "test:eyes": "node --test scripts/verify-eyes.cjs",
+    "test:features": "electron scripts/verify-features.cjs",
+    "test:desktop": "node --test scripts/verify-desktop.cjs",
+    "test:agents": "node --test scripts/verify-agents.cjs",
+    "test": "npm run test:eyes && npm run test:desktop && npm run test:agents && npm run test:ui && npm run test:3d && npm run test:polish && npm run test:features",
+    "predist": "node scripts/sync-three.cjs && electron scripts/build-icon.cjs",
+    "dist": "electron-builder --win --x64 --publish never",
+    "release:checksums": "node scripts/release-checksums.cjs"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0",
+    "node-ical": "0.27.3",
+    "three": "0.186.1"
+  },
+  "optionalDependencies": {
+    "uiohook-napi": "^1.5.4"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "dev.nyapix.app",
+    "npmRebuild": false,
+    "productName": "Nyapix",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "LICENSE",
+      "PRIVACY.md",
+      "RELEASE-NOTES.md"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.entertainment"
+    },
+    "portable": {
+      "artifactName": "Nyapix-${version}-${arch}-portable.${ext}"
+    },
+    "nsis": {
+      "artifactName": "Nyapix-${version}-${arch}-nsis.${ext}",
+      "deleteAppDataOnUninstall": false,
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
