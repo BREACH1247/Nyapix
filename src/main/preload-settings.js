@@ -1,6 +1,7 @@
 const { ipcRenderer, contextBridge } = require("electron");
 
 contextBridge.exposeInMainWorld("nyapixSettings", {
+  platform: process.platform,
   displays: () => ipcRenderer.invoke("display:list"),
   onSettings: cb => ipcRenderer.on("settings:changed", (_e, settings) => cb(settings)),
   getMusic: () => ipcRenderer.invoke("music:get"),

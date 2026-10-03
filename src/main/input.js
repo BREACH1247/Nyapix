@@ -20,8 +20,8 @@ function labelsFromUiohook(UiohookKey) {
     CtrlRight: "ctrl",
     Alt: "alt",
     AltRight: "alt",
-    Meta: "win",
-    MetaRight: "win",
+    Meta: process.platform === 'darwin' ? '⌘' : 'win',
+    MetaRight: process.platform === 'darwin' ? '⌘' : 'win',
     Minus: "-",
     Equal: "=",
     BracketLeft: "[",
@@ -78,6 +78,11 @@ function startInput(win, screen) {
   let stopKeys = () => {};
   let hooked = false;
   try {
+    // Do not start a native event tap without the user's macOS permission.
+    // libuiohook can terminate the process when an event tap is denied.
+    if (process.platform === 'darwin' && !require('electron').systemPreferences.isTrustedAccessibilityClient(false)) {
+      return () => clearInterval(cursorTimer);
+    }
     const { uIOhook, UiohookKey } = require("uiohook-napi");
     const labels = labelsFromUiohook(UiohookKey);
     uIOhook.on("keydown", (e) => {

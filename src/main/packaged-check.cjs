@@ -2,7 +2,10 @@ const {app,BrowserWindow,ipcMain}=require('electron');
 const path=require('node:path');
 app.whenReady().then(async()=>{
   try {
-    const {uIOhook}=require('uiohook-napi');uIOhook.start();uIOhook.stop();
+    const {uIOhook}=require('uiohook-napi');
+    if(typeof uIOhook.start!=='function')throw new Error('Native input module failed to load');
+    const inputAllowed=process.platform!=='darwin'||require('electron').systemPreferences.isTrustedAccessibilityClient(false);
+    if(inputAllowed){uIOhook.start();uIOhook.stop();}
     const calendar=require('node-ical').parseICS('BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:smoke\r\nDTSTART:20261003T120000Z\r\nSUMMARY:Smoke test\r\nEND:VEVENT\r\nEND:VCALENDAR');
     if(!calendar.smoke)throw new Error('Calendar parser failed');
     ipcMain.handle('settings:get',()=>({petKind:'cat',renderMode:'3d',soundEnabled:false}));
@@ -21,6 +24,6 @@ app.whenReady().then(async()=>{
       pet.setSettings({renderMode:'pixel'});pet.mode='idle';pet.draw();if(!pet._lastGrid)throw new Error('Pixel art failed');
       return {pixel:true,threeD:true,reactions:true};
     })()`);
-    console.log(JSON.stringify({packaged:app.isPackaged,version:app.getVersion(),nativeInput:true,calendar:true,...result}));app.exit(0);
+    console.log(JSON.stringify({packaged:app.isPackaged,version:app.getVersion(),nativeModule:true,nativeInput:inputAllowed?'tested':'not-tested-permission-required',calendar:true,...result}));app.exit(0);
   }catch(e){console.error(e);app.exit(1);}
 });

@@ -11,6 +11,9 @@ Nyapix has no analytics service, advertising SDK, account system, or listening-h
 - Preferences, favorite looks, and an optional calendar URL are stored locally
   in `%APPDATA%\Nyapix`. Preferences are not encrypted; treat private calendar
   URLs as secrets and do not include your settings file in bug reports.
+  On macOS, preferences are in `~/Library/Application Support/Nyapix` instead.
+  Global typing/scroll reactions on macOS require optional system permission;
+  Nyapix does not automatically grant or bypass that permission.
 - Spotify support reads title, artist, and playback state from Windows media
   sessions when enabled. It does not record audio or access a Spotify account.
 - Agent connections add opt-in local hooks and an authenticated loopback bridge.
@@ -35,3 +38,6 @@ relay live in your home directory. Uninstall preserves preferences so upgrades
 do not erase your pet. After quitting/uninstalling, delete `%APPDATA%\Nyapix`
 and `%USERPROFILE%\.nyapix` if you want to remove Nyapix's remaining local data.
 Do not delete `.codex`, `.claude`, or `.cursor` directories.
+On macOS, the equivalent retained locations are `~/Library/Application Support/Nyapix`
+and `~/.nyapix`. Revoke Nyapix's Accessibility/Input Monitoring access in System
+Settings if previously granted.

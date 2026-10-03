@@ -211,6 +211,14 @@ function createTray() {
       { label: "Nyapix", enabled: false },
       { type: "separator" },
       { label: "Settings", click: () => createSettings() },
+      ...(process.platform === 'darwin' ? [{label:'Enable keyboard / scroll reactions…',click:()=>{
+        const {systemPreferences,dialog}=require('electron');
+        if(systemPreferences.isTrustedAccessibilityClient(true)){
+          stopInput();stopInput=startInput(overlay,screen);
+        }else{
+          dialog.showMessageBox({type:'info',title:'Optional input reactions',message:'Allow Nyapix in System Settings → Privacy & Security → Accessibility.',detail:'If macOS also requests Input Monitoring, enable Nyapix there. Quit and reopen Nyapix after granting permission. Without permission, your companion and focus tools still work.'});
+        }
+      }}] : []),
       { label: "Show companion / end quiet mode", click: () => quickPatch({quietManual:false,quietAuto:false,quietFocus:false}) },
       {
         label: store.get("peekMode") ? "Disable peek mode" : "Peek mode",

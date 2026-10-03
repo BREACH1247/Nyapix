@@ -517,6 +517,11 @@ function frame(now) {
 }
 
 async function boot() {
+  if (window.nyapixSettings?.platform === 'darwin') {
+    for (const id of ['spotifyEnabled','quietAuto']) {
+      const input=document.getElementById(id);input.disabled=true;input.title='Available on Windows only in this beta';
+    }
+  }
   if (window.nyapixSettings?.displays) {
     try {
       const displays = await window.nyapixSettings.displays();

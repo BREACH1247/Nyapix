@@ -1,0 +1,79 @@
+name: macOS beta release
+on:
+  push:
+    tags: ['mac-v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mac:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+            app: dist/mac-arm64/Nyapix.app
+          - runner: macos-15-intel
+            arch: x64
+            app: dist/mac/Nyapix.app
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm test
+      - run: npm run dist:mac -- --${{ matrix.arch }}
+      - name: Check signature and packaged runtime
+        env:
+          APP_PATH: ${{ matrix.app }}
+        run: |
+          codesign --verify --deep --strict --verbose=2 "$APP_PATH"
+          node scripts/verify-package.cjs "$APP_PATH/Contents/MacOS/Nyapix"
+      - name: Check DMG and copied app
+        run: |
+          archive=(dist/*.dmg)
+          test "${#archive[@]}" -eq 1
+          hdiutil verify "${archive[0]}"
+          mountpoint=$(mktemp -d "$RUNNER_TEMP/nyapix-mount.XXXXXX")
+          destination=$(mktemp -d "$RUNNER_TEMP/nyapix-install.XXXXXX")
+          hdiutil attach "${archive[0]}" -nobrowse -readonly -mountpoint "$mountpoint"
+          trap 'hdiutil detach "$mountpoint"' EXIT
+          ditto "$mountpoint/Nyapix.app" "$destination/Nyapix.app"
+          codesign --verify --deep --strict "$destination/Nyapix.app"
+          node scripts/verify-package.cjs "$destination/Nyapix.app/Contents/MacOS/Nyapix"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mac-${{ matrix.arch }}
+          path: dist/*.dmg
+          if-no-files-found: error
+          retention-days: 7
+  publish:
+    needs: mac
+    if: startsWith(github.ref, 'refs/tags/mac-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: mac-*
+          merge-multiple: true
+          path: release
+      - name: Publish macOS beta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          test "$RELEASE_TAG" = "mac-v$version"
+          test -f "release/Nyapix-$version-mac-arm64.dmg"
+          test -f "release/Nyapix-$version-mac-x64.dmg"
+          (cd release && sha256sum ./*.dmg > SHA256SUMS-mac.txt)
+          gh release create "$RELEASE_TAG" --verify-tag --prerelease --title "Nyapix $version - macOS beta" --notes-file MAC-RELEASE-NOTES.md release/*.dmg release/SHA256SUMS-mac.txt PRIVACY.md

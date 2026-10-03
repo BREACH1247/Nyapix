@@ -2,6 +2,25 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {selectDisplay,petMenu}=require('../src/main/desktop-tools.cjs');
 const {normalize}=require('../src/main/agent-relay.cjs');
+test('macOS input capture is optional and never starts without permission',()=>{
+  const vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+  for(const allowed of [false,true]){
+    let started=0,stopped=0,cleared=0,loaded=0;
+    const module={exports:{}};
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../src/main/input.js'),'utf8'),{
+      module,process:{platform:'darwin'},setInterval:()=>1,clearInterval:()=>cleared++,
+      require:name=>{
+        if(name==='child_process')return {};
+        if(name==='electron')return {systemPreferences:{isTrustedAccessibilityClient:prompt=>{assert.equal(prompt,false);return allowed;}}};
+        if(name==='uiohook-napi'){loaded++;return {UiohookKey:{},uIOhook:{on(){},start(){started++;},stop(){stopped++;}}};}
+        throw new Error(name);
+      }
+    });
+    const stop=module.exports.startInput(null,{});stop();
+    assert.equal(loaded,Number(allowed));assert.equal(started,Number(allowed));
+    assert.equal(stopped,Number(allowed));assert.equal(cleared,1);
+  }
+});
 test('display selection handles negative origins and missing screens',()=>{
   const primary={id:1,bounds:{x:0,y:0,width:1920,height:1080}};
   const secondary={id:2,bounds:{x:-1600,y:0,width:1600,height:900}};

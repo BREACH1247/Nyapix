@@ -22,6 +22,8 @@
     "test": "npm run test:eyes && npm run test:desktop && npm run test:agents && npm run test:ui && npm run test:3d && npm run test:polish && npm run test:features",
     "predist": "node scripts/sync-three.cjs && electron scripts/build-icon.cjs",
     "dist": "electron-builder --win --x64 --publish never",
+    "predist:mac": "node scripts/sync-three.cjs && electron scripts/build-icon.cjs",
+    "dist:mac": "electron-builder --mac --publish never",
     "release:checksums": "node scripts/release-checksums.cjs"
   },
   "dependencies": {
@@ -48,7 +50,8 @@
       "package.json",
       "LICENSE",
       "PRIVACY.md",
-      "RELEASE-NOTES.md"
+      "RELEASE-NOTES.md",
+      "MAC-RELEASE-NOTES.md"
     ],
     "win": {
       "icon": "build/icon.ico",
@@ -58,6 +61,14 @@
       ]
     },
     "mac": {
+      "artifactName": "Nyapix-${version}-mac-${arch}.${ext}",
+      "icon": "build/icon-mac.png",
+      "identity": "-",
+      "notarize": false,
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "minimumSystemVersion": "15.0",
       "target": [
         "dmg"
       ],

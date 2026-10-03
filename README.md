@@ -12,7 +12,16 @@ No separate Node.js installation is needed for the packaged app.
 Read the [release notes](RELEASE-NOTES.md) and [privacy details](PRIVACY.md).
 Agent integrations are experimental: live Codex event delivery remains unverified.
 
-## Try it
+## macOS beta
+
+Mac downloads are published separately in [GitHub Releases](https://github.com/BREACH1247/Nyapix/releases).
+Choose the Apple Silicon (`arm64`) or Intel (`x64`) DMG. This initial beta targets
+macOS 15+. It is ad-hoc signed, not Apple-notarized. See
+[Mac installation, permissions, and limitations](MAC-RELEASE-NOTES.md).
+On a Mac, `npm run dist:mac` builds the native DMG. The `mac-v*` tag workflow
+builds and checks both architectures before publishing either download.
+
+## Develop locally
 
 For source development, install Node.js 22, run `npm ci`, then `npm start`.
 Right-click the pet or use the tray menu to open settings.
@@ -99,7 +108,8 @@ and portable ZIP. Extract the entire ZIP before running `Nyapix.exe`.
 `node scripts/verify-package.cjs` checks the packaged runtime
 and relay, and `npm run release:checksums` generates SHA-256 checksums.
 Pushing a version-matching `v*` tag runs these checks on GitHub Actions and
-publishes an unsigned prerelease. macOS and Linux packages are not released.
+publishes an unsigned Windows prerelease. Mac releases use the separate workflow
+above. Linux packages are not released.
 
 ## Appearance and music
 
