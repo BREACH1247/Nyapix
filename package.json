@@ -54,7 +54,7 @@
       "icon": "build/icon.ico",
       "target": [
         "nsis",
-        "portable"
+        "zip"
       ]
     },
     "mac": {
@@ -63,9 +63,8 @@
       ],
       "category": "public.app-category.entertainment"
     },
-    "portable": {
-      "artifactName": "Nyapix-${version}-${arch}-portable.${ext}"
-    },
+    "artifactName": "Nyapix-${version}-${arch}-portable.${ext}",
+    "compression": "normal",
     "nsis": {
       "artifactName": "Nyapix-${version}-${arch}-nsis.${ext}",
       "deleteAppDataOnUninstall": false,

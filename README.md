@@ -46,7 +46,7 @@ Codex, or Cursor. This installs observational user-level hooks. Existing setting
 and hooks are preserved, and a timestamped backup is created before a config is
 changed. **Disconnect** removes only Nyapix's entries. Source builds require
 Node.js on PATH; packaged builds use the bundled relay. If you move the portable
-executable, reconnect your integrations to update their saved path.
+folder, reconnect your integrations to update their saved path.
 Restart the connected harness. In Codex, use `/hooks` to review and trust the new
 definitions; Nyapix never changes hook-trust or permission settings for you.
 
@@ -95,7 +95,8 @@ authenticated HTTP transport in temporary test directories. These checks use
 representative documented payloads; they do not launch paid agent sessions.
 
 `npm test` runs all seven suites. `npm run dist` builds the Windows x64 installer
-and portable app. `node scripts/verify-package.cjs` checks the packaged runtime
+and portable ZIP. Extract the entire ZIP before running `Nyapix.exe`.
+`node scripts/verify-package.cjs` checks the packaged runtime
 and relay, and `npm run release:checksums` generates SHA-256 checksums.
 Pushing a version-matching `v*` tag runs these checks on GitHub Actions and
 publishes an unsigned prerelease. macOS and Linux packages are not released.

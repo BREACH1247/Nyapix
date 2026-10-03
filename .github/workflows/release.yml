@@ -22,6 +22,15 @@ jobs:
       - run: npm test
       - run: npm run dist
       - run: node scripts/verify-package.cjs
+      - name: Verify portable ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $destination = Join-Path $env:RUNNER_TEMP ('nyapix-portable-' + [guid]::NewGuid())
+          $archive = Get-ChildItem dist/Nyapix-*-portable.zip | Select-Object -First 1
+          Expand-Archive -LiteralPath $archive.FullName -DestinationPath $destination
+          node scripts/verify-package.cjs (Join-Path $destination 'Nyapix.exe')
+          if ($LASTEXITCODE -ne 0) { throw 'Portable runtime check failed' }
       - run: npm run release:checksums
       - name: Publish beta assets
         if: startsWith(github.ref, 'refs/tags/v')
@@ -33,6 +42,6 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
           if ($env:RELEASE_TAG -ne "v$version") { throw 'Tag and package version differ' }
-          $assets = @(Get-ChildItem dist/Nyapix-*.exe | ForEach-Object FullName)
+          $assets = @(Get-ChildItem dist/Nyapix-* | Where-Object { $_.Name -match '-(nsis\.exe|portable\.zip)$' } | ForEach-Object FullName)
           gh release create $env:RELEASE_TAG --verify-tag --prerelease --title "Nyapix $version - Windows beta" --notes-file RELEASE-NOTES.md @assets ./dist/SHA256SUMS.txt ./PRIVACY.md
           if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }

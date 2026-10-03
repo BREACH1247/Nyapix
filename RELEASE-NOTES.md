@@ -7,8 +7,9 @@ reminders, light/dark themes, Spotify playback reactions, and screen homes.
 ## Downloads
 
 - **Nyapix-0.1.0-x64-nsis.exe**: recommended installer, per-user by default.
-- **Nyapix-0.1.0-x64-portable.exe**: no installer; keep it at a stable location
-  if connecting coding agents. Portable mode still saves preferences in AppData.
+- **Nyapix-0.1.0-x64-portable.zip**: extract the entire folder, then run
+  `Nyapix.exe`. Keep the folder at a stable location if connecting coding agents.
+  This no-install edition still saves preferences in AppData.
 - **SHA256SUMS.txt**: verify downloads using PowerShell `Get-FileHash`.
 
 Windows 10/11 x64. No separate Node.js installation is required by the packaged
