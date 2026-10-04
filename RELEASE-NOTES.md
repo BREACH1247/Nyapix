@@ -1,4 +1,12 @@
-# Nyapix 0.1.0 — Windows beta
+# Nyapix 0.1.3 — Windows beta
+
+## New: interactive fetch
+
+Right-click your pet → **Play fetch / put toy away**. Drag the purple toy and
+release to throw it. Your cat or dog chases it, picks it up, and returns to its
+starting position. The toy stays ready for another throw. Works in Pixel and 3D.
+Throws stay on the selected screen; quiet mode, pausing, and agent reactions
+cancel the game. Use the same menu item to put the toy away.
 
 Pixel and real-time 3D cats and dogs for your desktop: idle routines, eye
 tracking, typing/scroll reactions, accessories, saved looks, focus timers,
@@ -6,8 +14,8 @@ reminders, light/dark themes, Spotify playback reactions, and screen homes.
 
 ## Downloads
 
-- **Nyapix-0.1.0-x64-nsis.exe**: recommended installer, per-user by default.
-- **Nyapix-0.1.0-x64-portable.zip**: extract the entire folder, then run
+- **Nyapix-0.1.3-x64-nsis.exe**: recommended installer, per-user by default.
+- **Nyapix-0.1.3-x64-portable.zip**: extract the entire folder, then run
   `Nyapix.exe`. Keep the folder at a stable location if connecting coding agents.
   This no-install edition still saves preferences in AppData.
 - **SHA256SUMS.txt**: verify downloads using PowerShell `Get-FileHash`.
@@ -29,7 +37,7 @@ features. Use GitHub Releases downloads, not GitHub's source ZIP, to run the app
 - Quiet mode may hide the pet in fullscreen. Use tray **Show companion** to
   turn quiet modes off. Suppressed reminders are not replayed.
 - No automatic update installation. Download the next installer from Releases.
-- macOS/Linux packages are not included or advertised as tested.
+- Mac downloads are in the separate macOS beta release. Linux is not released.
 
 ## Install / update / uninstall
 

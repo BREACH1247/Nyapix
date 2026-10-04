@@ -1,7 +1,7 @@
 {
   "name": "nyapix",
   "productName": "Nyapix",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Pixel and 3D desktop companions with focus tools and music reactions",
   "main": "src/main/entry.cjs",
   "author": "Nyapix",
@@ -19,7 +19,8 @@
     "test:features": "electron scripts/verify-features.cjs",
     "test:desktop": "node --test scripts/verify-desktop.cjs",
     "test:agents": "node --test scripts/verify-agents.cjs",
-    "test": "npm run test:eyes && npm run test:desktop && npm run test:agents && npm run test:ui && npm run test:3d && npm run test:polish && npm run test:features",
+    "test:fetch": "electron scripts/verify-fetch.cjs",
+    "test": "npm run test:eyes && npm run test:desktop && npm run test:agents && npm run test:ui && npm run test:3d && npm run test:polish && npm run test:features && npm run test:fetch",
     "predist": "node scripts/sync-three.cjs && electron scripts/build-icon.cjs",
     "dist": "electron-builder --win --x64 --publish never",
     "predist:mac": "node scripts/sync-three.cjs && electron scripts/build-icon.cjs",

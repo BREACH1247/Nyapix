@@ -103,7 +103,7 @@ configuration preservation, backups, fail-open relay behavior, and the actual
 authenticated HTTP transport in temporary test directories. These checks use
 representative documented payloads; they do not launch paid agent sessions.
 
-`npm test` runs all seven suites. `npm run dist` builds the Windows x64 installer
+`npm test` runs all eight suites. `npm run dist` builds the Windows x64 installer
 and portable ZIP. Extract the entire ZIP before running `Nyapix.exe`.
 `node scripts/verify-package.cjs` checks the packaged runtime
 and relay, and `npm run release:checksums` generates SHA-256 checksums.
@@ -114,6 +114,13 @@ above. Linux packages are not released.
 ## Appearance and music
 
 ## Companion controls
+
+- Choose **Play fetch / put toy away** from the pet's right-click menu. Drag
+  the purple toy and release to throw it. Your cat or dog chases it, picks it up,
+  and returns to its exact starting position with the toy ready for another throw.
+  Works in Pixel and 3D. Throws stay on the selected monitor. Choose the menu
+  item again (or Escape while the overlay has focus) to put the toy away.
+  Quiet mode, pausing, display/style changes, or agent reactions cancel fetch.
 
 - Right-click the pet for style, pause, mute, focus timer, quiet mode, routines,
   screen/corner selection, and settings. The tray also opens Settings and can

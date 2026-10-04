@@ -1,5 +1,6 @@
 import { NyapixCat } from "../cat/engine.js";
 import { labelFromDomKey } from "../shared/keys.js";
+import { bindFetch } from '../cat/fetch.js';
 
 const canvas = document.getElementById("stage");
 const pinEl = document.getElementById("pin");
@@ -23,6 +24,7 @@ function fit() {
 }
 
 const cat = new NyapixCat(canvas);
+const holdingToy=bindFetch(canvas,cat,ignore=>{lastOver=!ignore;api()?.setIgnoreMouse(ignore);});
 const systemTheme = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme() {
   document.documentElement.dataset.theme = cat.settings.theme === "system" ? (systemTheme.matches ? "dark" : "light") : cat.settings.theme;
@@ -73,6 +75,11 @@ function loop(now) {
   loop.prev = now;
   cat.update(dt);
   if (!quiet) cat.draw();
+  const toyCaptured=holdingToy();
+  if(!quiet&&!dragging&&!toyCaptured){
+    const over=cat.hitTest(cat.mouse.x,cat.mouse.y);
+    if(over!==lastOver){lastOver=over;api()?.setIgnoreMouse(!over);}
+  }
   placeHud();
   canvas.style.visibility = quiet ? "hidden" : "visible";
   if (quiet) {

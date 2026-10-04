@@ -1,5 +1,6 @@
 import { DEFAULTS, PET_DEFAULTS } from "../shared/defaults.js";
 import { PixelAudio } from "./audio.js";
+import { FetchGame } from "./fetch.js";
 import { drawCatArt } from "./art.js";
 import { drawDogArt } from "./dog-art.js";
 import { prepareSprite, findEyes, findEyeHighlights, splitTail, splitPaws, applyEyes, applyLook, drawKeycap, drawPixelHeart, drawPixelKeyboard, drawPixelToiletPaper, drawPixelTongue, sampleNativeColors, recolorSprite, cloneImageData } from "./sprite.js";
@@ -425,6 +426,7 @@ export class NyapixCat {
   }
 
   setSettings(next) {
+    if(this.fetch && ['scale','petKind','renderMode','homeCorner','homeDisplay','peekMode','paused'].some(k=>k in next&&next[k]!==this.settings[k]))this.fetch.cancel();
     const relocate = (next.homeCorner && next.homeCorner !== this.settings.homeCorner) || (next.homeDisplay && next.homeDisplay !== this.settings.homeDisplay);
     if (next.renderMode && next.renderMode !== this.settings.renderMode) {
       this.render3D?.dispose();
@@ -485,6 +487,7 @@ export class NyapixCat {
   }
 
   setDisplay(w, h, insets) {
+    this.fetch?.cancel();
     const prevBottom = this.display.insetBottom || 0;
     this.display.w = w;
     this.display.h = h;
@@ -612,6 +615,7 @@ export class NyapixCat {
   }
 
   startDrag(x, y) {
+    this.fetch?.cancel();
     this.drag = { dx: x - this.x, dy: y - this.y, lastX: x, lastY: y };
     this.mode = "drag";
     this.audio.ensure();
@@ -766,6 +770,11 @@ export class NyapixCat {
   }
 
   startRoutine(name) {
+    if(name==='fetch'){
+      if(this.fetch){this.fetch.cancel();return true;}
+      if(this.settings.paused||this.quiet||this.drag||['thinking','responding','waiting'].includes(this.agentInfo?.phase))return false;
+      this.mode='fetch';this.modeT=0;this.fetch=new FetchGame(this);this.say('Drag the toy, then release to throw!');return true;
+    }
     if (!["groom", "chase", "toy", "sleep"].includes(name) || this.settings.paused || this.quiet || this.drag) return false;
     if (["thinking","responding","waiting"].includes(this.agentInfo?.phase)) return false;
     this.mode = name; this.modeT = 0; this.routineCooldown = 35 + Math.random() * 35;
@@ -824,6 +833,7 @@ export class NyapixCat {
   }
 
   hitTest(px, py) {
+    if(this.fetch?.hit(px,py))return true;
     const r = this.catRect();
     if (px < r.x || py < r.y || px > r.x + r.w || py > r.y + r.h) return false;
     if (this.settings.renderMode === "3d" && this.render3D && !this.render3D.lost) return this.render3D.hitTest((px - r.x) / r.w, (py - r.y) / r.h);
@@ -871,6 +881,7 @@ export class NyapixCat {
   }
 
   update(dt) {
+    if(this.fetch&&(this.settings.paused||this.quiet))this.fetch.cancel();
     if (this.settings.paused) return;
     this.modeT += dt;
     this.idleT += dt;
@@ -1003,7 +1014,7 @@ export class NyapixCat {
     this.tailAngle = Math.sin(this.tailT * wagSpd) * wagAmp;
     this.settlePose(dt);
 
-    const busy = this.drag || this.mode === "hunt" || this.mode === "home" || this.mode === "stretch" || this.mode === "water" || this.mode === "hop";
+    const busy = this.fetch || this.drag || this.mode === "hunt" || this.mode === "home" || this.mode === "stretch" || this.mode === "water" || this.mode === "hop";
     if (this.peek && !busy) {
       const targetY = this.display.h - this.floorPad() - this.bodyH() * 0.45;
       this.y += (targetY - this.y) * Math.min(1, dt * 3);
@@ -1084,6 +1095,7 @@ export class NyapixCat {
       }
     }
 
+    this.fetch?.step(dt);
     this.clampPos();
   }
 
@@ -1104,7 +1116,7 @@ export class NyapixCat {
       const lap = this.modeT > 0.35 && this.modeT < 3.35;
       tilt = lap ? -0.24 - Math.sin(this.modeT * 12) * 0.06 : -0.1;
       bob = lap ? Math.max(0, Math.sin(this.modeT * 12)) * 3.2 : 1.2;
-    } else if (this.mode === "hunt" || this.mode === "home") {
+    } else if (this.mode === "hunt" || this.mode === "home" || (this.mode === 'fetch' && ['flight','chase','return'].includes(this.fetch?.phase))) {
       this.walkT += dt * 11;
       bob = Math.abs(Math.sin(this.walkT)) * 7;
       tilt = Math.sin(this.walkT) * 0.1;
@@ -1161,6 +1173,7 @@ export class NyapixCat {
     else this.drawRaster(ctx, r);
 
     this.drawEffects(ctx, r);
+    this.fetch?.draw(ctx);
     this.musicIndicator = this.drawMusicIndicator(ctx, r, rendered);
     const unit = Math.max(1, this.pixelMul() * .4);
     for (const cap of this.keycaps) drawKeycap(ctx, cap, unit);
@@ -1413,7 +1426,7 @@ export class NyapixCat {
       rect(18,y,4,4,s.bellyColor);rect(17,y+1,1,2,s.furColor);
       if(Math.sin(t*7)>0)rect(16,y,2,1,s.innerEarColor);
     }
-    if (this.mode === "toy") {
+    if (this.mode === "toy" || (this.mode==='fetch'&&this.fetch?.phase==='return')) {
       rect(12,19,7,4,"#b17cca");rect(13,18,5,1,"#d9afe6");rect(14,19,2,4,"#f4cd78");
     }
     if (this.mode === "test") {

@@ -15,7 +15,7 @@ export function drawCatArt(ctx, cat) {
   const sleeping = mode === "sleep";
   const happy = cat.pet > 0.2 || mode === "hop";
   const typing = mode === "knead" || mode === "edit";
-  const hunting = ["hunt","home","toy","chase"].includes(mode);
+  const hunting = ["hunt","home","toy","chase","fetch"].includes(mode);
   const stretching = mode === "stretch";
   const drinking = mode === "water";
   const heat = Math.min(1, cat.overheat) * 0.6;

@@ -10,6 +10,7 @@ function petMenu(s, displays, {patch, routine, settings, quit}) {
     {label:s.pomodoroEnabled?"Stop focus timer":"Start focus timer",click:()=>patch({pomodoroEnabled:!s.pomodoroEnabled})},
     {label:"Quiet mode",type:"checkbox",checked:!!s.quietManual,click:item=>patch({quietManual:item.checked})},
     {label:"Little routines",submenu:["groom","chase","toy","sleep"].map(name=>({label:{groom:"Groom",chase:"Chase tail",toy:"Bring a toy",sleep:"Curl up"}[name],click:()=>routine(name)}))},
+    {label:'Play fetch / put toy away',click:()=>routine('fetch')},
     {label:"Home screen",submenu:[{label:"Primary screen",type:"radio",checked:s.homeDisplay==="primary",click:()=>patch({homeDisplay:"primary"})},...displays.map(d=>({label:d.label,type:"radio",checked:s.homeDisplay===d.id,click:()=>patch({homeDisplay:d.id})}))]},
     {label:"Home corner",submenu:["top-left","top-right","bottom-left","bottom-right"].map(c=>({label:c.replace("-"," "),type:"radio",checked:s.homeCorner===c,click:()=>patch({homeCorner:c})}))},
     {type:"separator"},{label:"Settings",click:settings},{label:"Quit Nyapix",click:quit}

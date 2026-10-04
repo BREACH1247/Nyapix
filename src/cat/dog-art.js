@@ -12,7 +12,7 @@ export function drawDogArt(ctx, pet) {
   const reply = mode === "reply";
   const bow = mode === "stretch";
   const typing = mode === "knead" || mode === "edit";
-  const walk = ["hunt","home","toy","chase"].includes(mode);
+  const walk = ["hunt","home","toy","chase","fetch"].includes(mode);
   const sniff = mode === "sniff" || (mode === "idle" && t % 14 > 12);
   const drink = mode === "water";
   const ink = "#322b36",

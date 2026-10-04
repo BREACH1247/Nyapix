@@ -99,6 +99,7 @@
         <button id="done">Agent done</button>
         <button id="stretch">Stretch</button>
         <button id="water">Water</button>
+        <button id="fetch">Play fetch / put toy away</button>
         <button id="pomo">Pomodoro</button>
         <button id="cream">Cream coat</button>
         <button id="orange">Orange coat</button>
@@ -115,6 +116,7 @@
     </div>
     <script type="module">
       import { NyapixCat } from "../cat/engine.js";
+      import { bindFetch } from '../cat/fetch.js';
       import { labelFromDomKey } from "../shared/keys.js";
       import { PET_DEFAULTS, PRESETS } from "../shared/defaults.js";
       const canvas = document.getElementById("stage");
@@ -138,6 +140,8 @@
         cat.rememberHome();
       }
       let dragging = false;
+      bindFetch(canvas,cat);
+      document.getElementById('fetch').onclick=()=>cat.startRoutine('fetch');
       canvas.addEventListener("pointermove", (e) => {
         cat.setMouse(e.clientX, e.clientY);
         if (dragging) cat.moveDrag(e.clientX, e.clientY);
@@ -151,10 +155,12 @@
         }
       });
       window.addEventListener("pointerup", () => {
+        if(!dragging)return;
         dragging = false;
         cat.endDrag();
       });
       window.addEventListener("pointercancel", () => {
+        if(!dragging)return;
         dragging = false;
         cat.endDrag();
       });

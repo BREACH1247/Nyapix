@@ -1,12 +1,21 @@
-# Nyapix 0.1.2 — macOS beta
+# Nyapix 0.1.3 — macOS beta
+
+## New: interactive fetch
+
+Right-click your pet → **Play fetch / put toy away**. Drag the purple toy and
+release to throw it. Your cat or dog chases it, picks it up, and returns to its
+starting position. The toy stays ready for another throw. Available in Pixel
+and 3D (Intel 3D remains unverified, as noted below). Throws stay on the selected
+screen; pausing, quiet mode, or agent reactions cancel the game.
+Use the same menu item to put the toy away. Quit the old app before replacing it.
 
 Pixel and 3D cats and dogs, custom appearances, reminders, focus timers,
 idle routines, monitor homes, and experimental local agent reactions.
 
 ## Downloads
 
-- **Nyapix-0.1.2-mac-arm64.dmg**: Apple Silicon (M-series) Macs.
-- **Nyapix-0.1.2-mac-x64.dmg**: Intel Macs.
+- **Nyapix-0.1.3-mac-arm64.dmg**: Apple Silicon (M-series) Macs.
+- **Nyapix-0.1.3-mac-x64.dmg**: Intel Macs.
 - **SHA256SUMS-mac.txt**: download checksums.
 
 This initial beta requires **macOS 15 or newer**. Open the DMG, drag Nyapix

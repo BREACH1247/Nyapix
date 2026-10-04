@@ -146,7 +146,7 @@ export class Pet3D {
     const now = performance.now();
     const ease = 1 - Math.exp(-Math.min(.05, (now - (this.lastFrame || now - 16)) / 1000) * 15);
     this.lastFrame = now;
-    const sleep = mode === "sleep", happy = pet.pet > 0.2 || mode === "hop", typing = ["knead","edit"].includes(mode), walking = ["hunt", "home","toy"].includes(mode);
+    const sleep = mode === "sleep", happy = pet.pet > 0.2 || mode === "hop", typing = ["knead","edit"].includes(mode), walking = ["hunt", "home","toy"].includes(mode)||(mode==='fetch'&&['flight','chase','return'].includes(pet.fetch?.phase));
     const wave = mode === "wave", sniff = mode === "sniff", drink = mode === "water", stretch = mode === "stretch";
     this.rig.rotation.set(0, -0.16, pet.wobble * 0.45 + pet.tilt * 0.4);
     this.rig.scale.set(1, 1, 1);
@@ -199,7 +199,7 @@ export class Pet3D {
     this.tongue.rotation.z = Math.sin(t * 3) * .06 * this.tongueAmount;
     this.keyboard.visible = typing;
     this.bowl.visible = drink;
-    this.toy.visible = mode === "toy";
+    this.toy.visible = mode === "toy" || (mode==='fetch'&&pet.fetch?.phase==='return');
     this.lens.visible = mode === "test";
     this.lens.rotation.z = Math.sin(t*3)*.12;
     this.scene.updateMatrixWorld(true);

@@ -1,11 +1,7 @@
 name: macOS beta release
 on:
   push:
-    branches: [main]
     tags: ['mac-v*']
-    paths:
-      - '.github/workflows/mac-release.yml'
-      - 'src/main/packaged-check.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -38,7 +34,7 @@ jobs:
         run: npm test
       - name: Core and UI suites on GPU-less Intel runner
         if: matrix.arch == 'x64'
-        run: npm run test:eyes && npm run test:desktop && npm run test:agents && npm run test:ui
+        run: npm run test:eyes && npm run test:desktop && npm run test:agents && npm run test:ui && npm run test:fetch
       - run: npm run dist:mac -- --${{ matrix.arch }}
       - name: Check signature and packaged runtime
         env:
